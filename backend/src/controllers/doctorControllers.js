@@ -33,3 +33,52 @@ doctorController.getDoctorById
     }
 };
 
+doctorController.uodateDoctor
+=async(req,res)=>{
+
+try {
+  const {name,specialty,email,password} = req.body;
+
+const updatedDoctor = await DoctorModel.findByIdAndUpdate(
+    req.params.id,
+    {name,specialty,email,password},
+    {new:true}
+);
+
+if (!updatedDoctor) {
+    return res.status(404).json({ message: 'Doctor not found' });
+    
+}
+
+res.json({message: 'Doctor updated successfully'});
+
+}
+catch (error) {
+    res.status(500).json({ message: 'Error not found the Doctor ', error: error.message });
+}
+};
+
+//Elimina un doctor por ID
+
+doctorController.deleteDoctor
+=async (req,res)=>{
+   const deleteDoctor = await DoctorModel.findbyIdAndDelete(req.params.id);
+
+   if (!deleteDoctor) {
+       return res.status(404).json({ message: 'Doctor not found' });
+    
+   }
+
+    res.json({message: 'Doctor deleted successfully'});
+
+    catch (error){
+        res.status(500).json({ message: 'Error not found the Doctor ', error: error.message });
+    }
+
+
+
+
+};
+
+export default doctorController;
+
