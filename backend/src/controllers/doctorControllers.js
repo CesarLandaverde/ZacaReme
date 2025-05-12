@@ -62,22 +62,17 @@ catch (error) {
 
 doctorController.deleteDoctor
 =async (req,res)=>{
-   const deleteDoctor = await DoctorModel.findbyIdAndDelete(req.params.id);
+   try {
+        const deleteDoctor = await DoctorModel.findByIdAndDelete(req.params.id);
 
-   if (!deleteDoctor) {
-       return res.status(404).json({ message: 'Doctor not found' });
-    
-   }
+        if (!deleteDoctor) {
+            return res.status(404).json({ message: 'Doctor not found' });
+        }
 
-    res.json({message: 'Doctor deleted successfully'});
-
-    catch (error){
-        res.status(500).json({ message: 'Error not found the Doctor ', error: error.message });
+        res.json({ message: 'Doctor deleted successfully' });
+    } catch (error) {
+        res.status(500).json({ message: 'Error not found the Doctor', error: error.message });
     }
-
-
-
-
 };
 
 export default doctorController;
