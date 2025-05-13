@@ -107,3 +107,48 @@ registerDoctorController.register = async (req, res) => {
 
 //Verificacion del correo electronico el recibir el token 
 
+registerDoctorController.verifyCodeEmail = async (req,res)=>{
+ const {verificationCode} = req.body;
+ const token = req.cookies.verificationToken;
+
+ if (!token) {
+    return res.status(401).json({ message: 'Token not provided' });
+    
+ }
+ try {
+    //Verifica y decodifica elJWT 
+    const decoded = jwt.verify(token, config.jwt.secret);
+    const {email,verificationCode:storedCode}= decoded;
+
+    //Compara el codigo recibido con el almacenado
+    if (verificationCode !== storedCode) {
+        return res.status(401).json({ message: 'Invalid verification code' });
+        
+    }
+    //Marcar al doctor como verificado
+    const doctor = await DoctorModel.findOne({ email });
+    if(!doctor){
+return res.status(404).json({ message: 'Doctor not found' });
+
+   }
+   //Actualiza el campo
+   doctor.isVerified = true;
+    await doctor.save();
+
+    //Limpias la cookie
+    res.clearCookie('verificationToken');
+
+    res.status(200).json({ message: 'Email verified successfully' });
+
+
+ } catch (error) {
+    res
+   .status(500)
+   .json({ message: 'Error verifying email', error: error.message });
+    
+ }
+
+
+};
+
+export default registerDoctorController;
