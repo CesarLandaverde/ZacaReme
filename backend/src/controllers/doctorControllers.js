@@ -1,4 +1,4 @@
-import DoctorModel from '../models/doctorModel.js';
+import DoctorModel from '../models/Doctor.js';
 
 const doctorController = {};
 
@@ -33,7 +33,7 @@ doctorController.getDoctorById
     }
 };
 
-doctorController.uodateDoctor
+doctorController.updateDoctor
 =async(req,res)=>{
 
 try {

@@ -61,4 +61,6 @@ const doctorSchema = new Schema({
 );
 
 
-export default model('Doctor', doctorSchema);
+const DoctorModel = model('Doctor', doctorSchema);
+
+export default DoctorModel;
