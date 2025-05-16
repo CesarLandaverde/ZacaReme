@@ -2,6 +2,7 @@ import dotenv from "dotenv";
 dotenv.config();
 
 console.log("DB_URI desde config.js:", process.env.DB_URI);
+console.log("JWT_SECRET desde config.js:", process.env.JWT_SECRET);
 
 export const config = {
     server: {
@@ -19,3 +20,4 @@ export const config = {
         password: process.env.USER_PASS,
     },
 };
+//sfdsasfsddfgd

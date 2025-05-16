@@ -1,9 +1,10 @@
 import jwt from 'jsonwebtoken';
 import { config } from '../config.js';
 import Doctor from '../models/Doctor.js';
-import { SendEmail } from '../utils/sendEmail.js';
 import bcrypt from 'bcrypt';
-import { HTMLRecoveryEmail } from '../utils/HTMLRecoveryEmail.js';
+import SendEmail from '../utils/sendEmail.js';
+import HTMLRecoveryEmail from '../utils/HTMLRecoveryEmail.js'; // Si tienes esta función en otro archivo, ajusta la ruta
+
 
 const recoveryPasswordController = {};
 
@@ -27,7 +28,7 @@ recoveryPasswordController.requestCode = async (req, res) => {
         const code = Math.floor(100000 + Math.random() * 900000).toString();
 
         // Guardar token JWT con el correo, el codigo y el user type
-        const token = jwt.sign({ email, code, userType }, config.JWT_SECRET, { expiresIn: '10m' });
+        const token = jwt.sign({ email, code, userType }, config.jwt.secret, { expiresIn: '10m' });
 
         // Guardar el token en una cookie
         res.cookie("tokenRecoveryCode", token, {
@@ -70,7 +71,7 @@ recoveryPasswordController.verifyCode = async (req, res) => {
         }
 
         // Verificar el token JWT
-        const decoded = jwt.verify(token, config.JWT_SECRET);
+        const decoded = jwt.verify(token, config.jwt.secret);
 
         // Verificar si el codigo es correcto
         if (decoded.code !== code) {
@@ -80,7 +81,7 @@ recoveryPasswordController.verifyCode = async (req, res) => {
         // Marcar el token como verificado
         const newToken = jwt.sign(
             { email: decoded.email, userType: decoded.userType, verified: true },
-            config.JWT_SECRET,
+            config.jwt.secret,
             { expiresIn: '15m' }
         );
 
@@ -115,7 +116,7 @@ recoveryPasswordController.resetPassword = async (req, res) => {
         }
 
         // Verificar el token JWT
-        const decoded = jwt.verify(token, config.JWT_SECRET);
+        const decoded = jwt.verify(token, config.jwt.secret);
 
         // Verificar si el codigo fue verificado
         if (!decoded.verified) {
